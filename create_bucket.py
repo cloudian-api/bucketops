@@ -19,7 +19,8 @@ def PrintUsage():
 def create_bucket(bucket_name,mycluster):
 
     session = boto3.session.Session()
-    current_region = session.region_name
+    #session.region_name returns all upper case sometimes.
+    current_region = session.region_name.lower()
     try:
         bucket_response = mycluster.s3.create_bucket(
             Bucket=bucket_name,
