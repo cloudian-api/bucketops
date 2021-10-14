@@ -9,9 +9,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 # You can get these by logging into CMC as a non-admin user and then Security Credentials.
 # You can also feed in the access and secret keys in the following way:
 # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
-accesskey = "00bc3fd22f8547d06c52"
-secretkey = "lyiC3IxRAxuwAgtiRZ7ghcQHv5DufEf242Z6mTDw"
-endpoint = "http://s3-tme1508.cloudiantme.local"
+accesskey = "some access key"
+secretkey = "some secret key"
+endpoint = "http://s3-<region>.<domain>"
 
 # ============ DO NOT CHANGE ANYTHING BELOW THIS LINE ==========
 class my_api():
