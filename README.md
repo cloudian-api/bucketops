@@ -2,7 +2,9 @@
 Scripts that manipulate buckets on Cloudian.
 More for information regarding the Cloudian HyperStore REST API, please browse sections 11 through 16 of the manual.
 
-You will need Python, I used version 3.9.7. Also the boto3 Python library (AWS SDK)
+You will need Python, I used version 3.9.7. Also the boto3 Python library (AWS SDK). I also ran this on Linux. 
+To clone this repo, navigate to the folder of your choice and type:
+git clone git://github.com/cloudian-api/bucketops
 
 Here is a description of the files in this repo:
 * clusterconfig.py contains variables and common functions used in the code. It is a Python module. You will need to update the variables above the line in order to get the programs to work.
