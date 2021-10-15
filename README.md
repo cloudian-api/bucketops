@@ -6,8 +6,11 @@ You will need Python, I used version 3.9.7. Also the boto3 Python library (AWS S
 https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
 
 You will also need the requests library. So:
+
 git clone git://github.com/requests/requests.git
+
 cd requests
+
 pip install .
 
 To clone this repo, navigate to the folder of your choice and type:
