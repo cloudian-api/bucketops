@@ -35,7 +35,7 @@ if __name__ == "__main__":
         print("Cannot connect to HyperStore.")
         print("Did you remember to update the config file?")
         print(ret)
-        sys.exit
+        sys.exit(1)
 
     # Now we can delete the bucket.
     bucket_name = sys.argv[1]
