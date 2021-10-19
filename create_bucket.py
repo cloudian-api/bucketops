@@ -25,7 +25,7 @@ def PrintUsage():
 
 # Create a bucket in the current region. You could add a parameter to this function to deal with a region that is NOT the current region.
 # We use the requests and requests_awsauth4 library here because boto3 doesn't seem to handle custom headers properly.
-# Remember x-gmt-policy is a custom header that needs to be sent to Cloudian at the time of bucket creation.
+# Remember x-gmt-policy is a custom header that needs to be sent to HyperStore at the time of bucket creation.
 # The only way to do this is via an HTTP PUT.
 # We can use this approach for all HyperStore extensions to the S3 API.
 def create_bucket(bucket_name,spolicy,mycluster):
