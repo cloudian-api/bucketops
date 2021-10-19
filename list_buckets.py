@@ -4,7 +4,6 @@
 # This script lists all buckets owned by a particular user specified in clusterconfig.py.
 
 import sys
-import boto3
 import clusterconfig as C
 
 
