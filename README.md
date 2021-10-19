@@ -12,7 +12,8 @@ pip install requests
 pip install requests_aws4auth
 
 To clone this repo, navigate to the folder of your choice and type:
-git clone git://github.com/cloudian-api/bucketops
+git clone git://github.com/cloudian-api/bucketops; cd bucketops; chmod 700 *.py. 
+Now you can modify clusterconfig.py with your parameters and type ./listbuckets.py to get started.
 
 Here is a description of the files in this repo:
 * clusterconfig.py contains variables and common functions used in the code. It is a Python module. You will need to update the variables above the line in order to get the programs to work.
