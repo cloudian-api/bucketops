@@ -17,7 +17,11 @@ git clone git://github.com/cloudian-api/bucketops
 Here is a description of the files in this repo:
 * clusterconfig.py contains variables and common functions used in the code. It is a Python module. You will need to update the variables above the line in order to get the programs to work.
 
-* create_bucket.py creates a bucket that is owned by a user specified in clusterconfig.py.
+* create_bucket.py takes various arguments:
+   * Without any parameters it outputs all the storage policies you have configured on HyperStore. You will need the policy ID of a particular storage policy for the next step. Remember, a storage policy has a policy name and a policy ID.
+   * With a bucket name and a policy ID (which you obtained from the previous step) it will create a bucket with the corresponding storage policy.
+   * With just a bucket name (one parameter) it will create a bucket with the default storage policy, whatever it is defined to be.
+  Creating a bucket with a particular storage policy is a custom extension to the S3 API by HyperStore. It is implemented in create_bucket.py by utilizing the requests library. All buckets are created in the current region as returned by boto3. An exercise could be to modify the create_bucket() function to take a region as a parameter.
 
 * list_buckets.py lists all buckets owned by a user specified in clusterconfig.py.
 
