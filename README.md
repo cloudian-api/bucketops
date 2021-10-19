@@ -5,13 +5,11 @@ More for information regarding the Cloudian HyperStore REST API, please browse s
 You will need Python, I used version 3.9.7. Also the boto3 Python library (AWS SDK): 
 https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
 
-You will also need the requests library. So:
+You will also need the requests library and the requests_aws4auth library. So:
 
-git clone git://github.com/requests/requests.git
+pip install requests
 
-cd requests
-
-pip install .
+pip install requests_aws4auth
 
 To clone this repo, navigate to the folder of your choice and type:
 git clone git://github.com/cloudian-api/bucketops
