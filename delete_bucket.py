@@ -4,15 +4,14 @@
 # This script deletes a bucket owned by a particular user specified in clusterconfig.py.
 
 import sys
-import boto3
 import clusterconfig as C
 
 
 # Print usage messages.
 def PrintUsage():
 
-    print ("<Usage>: <{}> bucket_name".format(sys.argv[0]))
-    print ("Delete bucket with name 'bucket_name'")
+    print ("<Usage>: <{}> <bucket name>.".format(sys.argv[0]))
+    print ("Delete bucket with name <bucket name>.")
     return
 
 def delete_bucket(bucket_name,mycluster):
@@ -45,3 +44,4 @@ if __name__ == "__main__":
         print("Could not delete bucket: ",bucket_name)
         print(ret)
     sys.exit(0)
+
