@@ -7,6 +7,8 @@ https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
 
 You will also need the requests library and the requests_aws4auth library. So:
 
+pip install boto3
+
 pip install requests
 
 pip install requests_aws4auth
