@@ -4,6 +4,7 @@
 import json
 import boto3
 import requests
+from requests_aws4auth import AWS4Auth
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # Cloudian cluster details. We need these in order to log into the REST API.
@@ -12,8 +13,8 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
 # Another way to do this may be to read ~/.aws/credentials.
 # But the keys are defined here for convenience and hopeafully better understanding.
-accesskey = "some access key"
-secretkey = "some secret key"
+accesskey = "your access key"
+secretkey = "your secret key"
 endpoint = "http://s3-<region>.<domain>"
 
 # These variables are only used for the Admin API.
@@ -24,12 +25,18 @@ endpoint = "http://s3-<region>.<domain>"
 adminIP="10.10.10.10"
 adminApiPort=19443
 adminName="sysadmin"
-adminPass="some password"
+adminPass="your admin password"
 
 # ============ DO NOT CHANGE ANYTHING BELOW THIS LINE ==========
 class my_api():
     def __init__(self,accesskey,secretkey,endpoint):
-        self.s3 = boto3.resource('s3',aws_access_key_id=accesskey,aws_secret_access_key=secretkey,endpoint_url=endpoint)
+
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+        try:
+            self.s3 = boto3.resource('s3',aws_access_key_id=accesskey,aws_secret_access_key=secretkey,endpoint_url=endpoint)
+            self.session = boto3.session.Session()
+        except Exception as ex:
+            print(ex)
         self.admin_url = "https://%s:%s/" %(adminIP,adminApiPort)
         self.admin_session = self.get_server_session(adminName,adminPass)
 
@@ -51,13 +58,20 @@ class my_api():
         else:
             return(0,bucket_name)
 
-    # We need an admin session only for getting the list of bucket storage policies.
-    # Otherwise we open a session using our AWS/Cloudian creds to send custom headers and such.
+    # We need an admin session only for dealing with bucket storage policies.
     def get_server_session(self, username, password):
         session = requests.Session()
         session.auth = (username, password)
         session.verify = False
         return session
+
+    # Get the signed authorization header for when we call requests().
+    # Boto3 takes care of this automagically. But we need requests() for HyperStore custom headers.
+    # We could follow the steps in: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
+    # but we take the easy way out and use the requests_aws4auth library instead.
+    def get_auth_string(self,region):
+
+        return(AWS4Auth(accesskey,secretkey,region,"s3"))
 
     # Get storage policies.
     def get_storage_policies(self):
@@ -69,10 +83,19 @@ class my_api():
             print(ex)
             return(-1,bpolicy_url)
 
+    # Get buckets per storage policy.
+    def get_bucketsstorage_policies(self):
+        bpolicy_url = self.admin_url + "bppolicy/bucketsperpolicy"
+        try:
+            server_response = self.admin_session.get(bpolicy_url)
+            return(server_response.status_code,json.loads(server_response.text))
+        except Exception as ex:
+            print(ex)
+            return(-1,bpolicy_url)    
+
     # List storage policies by policyname and policyID.
     def list_storage_policies(self,storage_policies):
         for storage_policy in storage_policies:
-            print("******************************************")
             items = storage_policy.items()
             for item in items:
                 key = item[0]
@@ -81,11 +104,13 @@ class my_api():
                     print("PolicyName: ",value)
                 elif (key == "policyId"):
                     print("PolicyID: ",value)
+            print("******************************************")
         return(0)
 
     # Get default storage policy of cluster.
     def get_default_storage_policy(self):
         status,resp = self.get_storage_policies()
+        # If we can't connect we send back a dummy name for the storage policy.
         if (status != 200):
             print("Cannot connect to ",resp)
             return("@@@",-1)

@@ -10,8 +10,8 @@ import clusterconfig as C
 # Print usage messages.
 def PrintUsage():
 
-    print ("<Usage>: <{}> <bucket name>.".format(sys.argv[0]))
-    print ("Delete bucket with name <bucket name>.")
+    print ("<Usage>: <{}> <bucket name>".format(sys.argv[0]))
+    print ("Delete bucket with name <bucket name>")
     return
 
 def delete_bucket(bucket_name,mycluster):
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         print("Cannot connect to HyperStore.")
         print("Did you remember to update the config file?")
         print(ret)
-        sys.exit(1)
+        sys.exit
 
     # Now we can delete the bucket.
     bucket_name = sys.argv[1]
@@ -44,4 +44,3 @@ if __name__ == "__main__":
         print("Could not delete bucket: ",bucket_name)
         print(ret)
     sys.exit(0)
-

@@ -5,45 +5,43 @@
 
 import re
 import sys
-import boto3
 import clusterconfig as C
 import requests
-from requests_aws4auth import AWS4Auth
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # Print usage messages.
 def PrintUsage():
     
-    print ("<Usage>: <{}>")
+    print ("<Usage>: <{}>".format(sys.argv[0]))
     print ("With no arguments will display all configured storage policies.\n")
     print ("<Usage>: <{}> <bucket name>".format(sys.argv[0]))
-    print ("Will create a bucket with name <bucket_name> with the default storage policy.\n")
+    print ("Will create a bucket with name <bucket name> with the default storage policy.\n")
     print ("<Usage>: <{}> <bucket name> <policy ID>".format(sys.argv[0]))
     print ("Will create a bucket with name <bucket name> with <policy ID>.")
     print ("You can get the policy ID by running the script without any arguments.")
     return
 
 # Create a bucket in the current region. You could add a parameter to this function to deal with a region that is NOT the current region.
-# We use the requests and requests_awsauth4 library here because boto3 doesn't seem to handle custom headers properly.
-# Remember x-gmt-policy is a custom header that needs to be sent to HyperStore at the time of bucket creation.
+# We use the requests library here because boto3 doesn't seem to handle custom headers properly.
+# Remember x-gmt-policy is a custom header that needs to be sent to Cloudian at the time of bucket creation.
 # The only way to do this is via an HTTP PUT.
 # We can use this approach for all HyperStore extensions to the S3 API.
 def create_bucket(bucket_name,spolicy,mycluster):
 
-    session = boto3.session.Session()
+    txt_response = ""
     #session.region_name returns all upper case sometimes which violates naming constraints.
-    current_region = session.region_name.lower()
-    auth = AWS4Auth(C.accesskey,C.secretkey,current_region,"s3")
+    current_region = mycluster.session.region_name.lower()
+    auth_string = mycluster.get_auth_string(current_region)
     headers = {"x-gmt-policyid": spolicy}
     myendpoint = re.sub("http://", "http://" + bucket_name + ".", C.endpoint)
     try:
-        response = requests.put(myendpoint, auth=auth, headers=headers)
-        bucket_response = response.text
-        retval = "Created: ", bucket_name + " " + "In region: ", current_region
+        response = requests.put(myendpoint, auth=auth_string, headers=headers)
+        txt_response = response.text
+        retval = "Created: ", bucket_name + " " + "in region: ", current_region
+        status = response.status_code
+        response.raise_for_status()
     except Exception as ex:
         retval = ex
-        bucket_response = -1
-    return (bucket_response, retval)
+    return (status,txt_response, retval)
 
 if __name__ == "__main__":
 
@@ -63,7 +61,6 @@ if __name__ == "__main__":
         PrintUsage()
         sys.exit(1)
 
-    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     mycluster = C.my_api(C.accesskey,C.secretkey,C.endpoint)
     status,ret = mycluster.verify_creds()
     # If status is not 0, then we weren't able to connect for some reason.
@@ -83,6 +80,7 @@ if __name__ == "__main__":
         print("******* PLEASE SPECIFY POLICYID DURING BUCKET CREATION. *******\n")
         storage_policies = resp
         mycluster.list_storage_policies(storage_policies)
+        PrintUsage()
         sys.exit(0)
 
     # If we marked the storage_policy as default, get the hex ID so we can pass it to create_bucket()
@@ -95,6 +93,6 @@ if __name__ == "__main__":
 
     # Now we can create the bucket.
     # We could check here if the bucket exists first and drop out otherwise.
-    status, ret = create_bucket(bucket_name,spolicy,mycluster)
-    print (status,ret)
+    status, txt_response, ret = create_bucket(bucket_name,spolicy,mycluster)
+    print (status," ",txt_response," ",ret)
     sys.exit(0)
