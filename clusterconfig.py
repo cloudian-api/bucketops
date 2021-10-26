@@ -34,6 +34,7 @@ class my_api():
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
         try:
             self.s3 = boto3.resource('s3',aws_access_key_id=accesskey,aws_secret_access_key=secretkey,endpoint_url=endpoint)
+            self.s3_client = boto3.client('s3',aws_access_key_id=accesskey,aws_secret_access_key=secretkey,endpoint_url=endpoint)
             self.session = boto3.session.Session()
         except Exception as ex:
             print(ex)
