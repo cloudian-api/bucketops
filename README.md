@@ -29,3 +29,5 @@ Here is a description of the files in this repo:
 * list_buckets.py lists all buckets owned by a user whose keys are specified in clusterconfig.py, along with their policy name and policy ID. Note that all operations having to do with retrieving information about bucket storage policies and setting bucket storage policies require the requests() library because they are custom extensions.
 
 * delete_bucket.py deletes a bucket owned by a user whose keys are specified in clusterconfig.py.
+
+* group_list_buckets.py takes the name of a group, finds all the users belonging to that group and lists buckets owned by those users.
