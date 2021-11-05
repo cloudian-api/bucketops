@@ -5,7 +5,6 @@
 # You can use the GET /usage admin API call to get utilization by group, by specifying a time-period.
 
 import sys
-import requests
 import clusterconfig as C
 
 # Get a username, and list buckets for that username.
