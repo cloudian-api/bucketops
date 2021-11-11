@@ -7,7 +7,7 @@
 import sys
 import clusterconfig as C
 
-# Get a username, and list buckets for that username.
+# Get credentials for username, and list buckets for that username.
 def my_list_buckets(username,group,mycluster):
 
     # Get the credentials of a particular user in the group that was specified on the command line.
@@ -30,6 +30,7 @@ def my_list_buckets(username,group,mycluster):
     skey = secInfo['secretKey']
     
     # Here we are over-riding the credentials in clusterconfig and running as another user!
+    # You can change the default endpoint here also, if you pass it in as a parameter.
     temp_cl = C.my_api(akey,skey,C.endpoint)
     response_b = temp_cl.s3_client.list_buckets()
     print(">>>> Bucket listing for user {} from group {}.".format(username,group))
