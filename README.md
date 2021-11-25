@@ -13,6 +13,10 @@ pip install requests
 
 pip install requests_aws4auth
 
+The boto3 library (you will hear people call it the AWS SDK also) is used for native S3 API calls on Cloudian HyperStore. You can use boto3 to interact with AWS as well. 
+The requests library is more low-level, you use it to make HTTP GET/POST/PUT calls. In our scripts we use the requests library to utilize the S3 extensions provided by Cloudian HyperStore. In addition we also use the requests library to call the admin API of Cloudian HyperStore. 
+The requests_aws4auth library is used to construct a signed authorization string when we call the requests library for S3 extensions. 
+
 To clone this repo, navigate to the folder of your choice and type:
 git clone git://github.com/cloudian-api/bucketops; cd bucketops; chmod 700 *.py. 
 Now you can modify clusterconfig.py with your parameters (credentials, adminIP information) and type ./listbuckets.py to get started.
